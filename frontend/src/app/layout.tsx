@@ -14,7 +14,6 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-        <head/>
         <body
             className={`${fonts.dharma.className} font-bold min-h-screen antialiased overflow-hidden`}>
         {children}
