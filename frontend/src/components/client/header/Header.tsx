@@ -1,9 +1,9 @@
 import fonts from "@/utils/Fonts";
 import Image from "next/image";
-import searchIcon from "@/assets/icons/common/search.svg";
-import cartIcon from "@/assets/icons/common/cart.svg";
-import profileIcon from "@/assets/icons/common/profile.svg";
-import Navbar from "@/components/navbar/Navbar";
+import searchIcon from "@/assets/client/icons/common/search.svg";
+import cartIcon from "@/assets/client/icons/common/cart.svg";
+import profileIcon from "@/assets/client/icons/common/profile.svg";
+import Navbar from "@/components/client/navbar/Navbar";
 
 export default function Header() {
     return (
