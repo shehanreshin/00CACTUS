@@ -1,5 +1,5 @@
-import featuredCardImage1 from "@/assets/client/img/home/featured-1.svg";
-import featuredCardImage2 from "@/assets/client/img/home/featured-2.svg";
+import featuredCardImage1 from "@/assets/client/img/home/featured-1.jpg";
+import featuredCardImage2 from "@/assets/client/img/home/featured-2.jpg";
 import Image from "next/image";
 import fonts from "@/utils/Fonts";
 
