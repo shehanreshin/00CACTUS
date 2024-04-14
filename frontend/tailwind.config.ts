@@ -73,6 +73,11 @@ const config = {
         mono: ["var(--font-dharma)"],
       },
     },
+    letterSpacing: {
+      "npx2": "-2px",
+      "npx3": "-3px",
+      "space": "9px",
+    },
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config
