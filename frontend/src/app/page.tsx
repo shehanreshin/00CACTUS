@@ -4,8 +4,8 @@ import fonts from "@/utils/Fonts";
 
 export default function Page() {
     return (
-        <div className={`min-h-screen min-w-screen flex flex-col py-5`}>
-            <div className={`container flex flex-col gap-14`}>
+        <div className={`min-h-screen flex flex-col py-5`}>
+            <div className={`container mx-auto flex flex-col gap-14 px-16`}>
                 <Header />
                 <Home />
             </div>

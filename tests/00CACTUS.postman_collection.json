@@ -1,0 +1,26 @@
+{
+	"info": {
+		"_postman_id": "6c8649b9-5b5b-47a0-be57-bb6de659f29e",
+		"name": "00CACTUS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31976375"
+	},
+	"item": [
+		{
+			"name": "General",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000"
+				}
+			},
+			"response": []
+		}
+	]
+}
