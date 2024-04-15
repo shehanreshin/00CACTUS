@@ -1,21 +1,23 @@
-/*
-  Warnings:
-
-  - Changed the type of `role` on the `User` table. No cast exists, the column would be dropped and recreated, which cannot be done if there is data, since the column is required.
-  - Changed the type of `status` on the `User` table. No cast exists, the column would be dropped and recreated, which cannot be done if there is data, since the column is required.
-
-*/
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('CUSTOMER', 'STAFF', 'ADMIN');
 
 -- CreateEnum
 CREATE TYPE "UserStatus" AS ENUM ('INACTIVE', 'ACTIVE', 'TEMP_DISABLED', 'PERM_DISABLED');
 
--- AlterTable
-ALTER TABLE "User" DROP COLUMN "role",
-ADD COLUMN     "role" "UserRole" NOT NULL,
-DROP COLUMN "status",
-ADD COLUMN     "status" "UserStatus" NOT NULL;
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "role" "UserRole" NOT NULL DEFAULT 'CUSTOMER',
+    "status" "UserStatus" NOT NULL DEFAULT 'INACTIVE',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Contact" (
@@ -51,7 +53,10 @@ CREATE TABLE "Country" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Contact_phoneNumber_key" ON "Contact"("phoneNumber");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Contact_userId_phoneNumber_key" ON "Contact"("userId", "phoneNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Country_code_key" ON "Country"("code");
