@@ -65,6 +65,7 @@ model Address {
   countryId String
   updatedAt DateTime  @updatedAt
   Customer  Customer?
+  Order     Order[]
 }
 
 model Country {
@@ -85,6 +86,7 @@ model Customer {
   updatedAt     DateTime        @updatedAt
   Cart          Cart?
   PaymentMethod PaymentMethod[]
+  Order         Order[]
 }
 
 model Staff {
@@ -168,6 +170,7 @@ model ProductItem {
   updatedAt            DateTime               @updatedAt
   ProductConfiguration ProductConfiguration[]
   CartItem             CartItem[]
+  OrderLine            OrderLine[]
 }
 
 model ProductConfiguration {
@@ -206,6 +209,57 @@ model PaymentMethod {
   isDefault     Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+  Order         Order[]
 
   @@unique([customerId, paymentTypeId, provider, accountNumber])
+}
+
+model OrderStatus {
+  id    String            @id @default(uuid())
+  value OrderStatusOption @unique
+  Order Order[]
+}
+
+enum OrderStatusOption {
+  PENDING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model ShippingMethod {
+  id    String  @id @default(uuid())
+  name  String  @unique
+  price Decimal
+  Order Order[]
+}
+
+model Order {
+  id                String         @id @default(uuid())
+  customer          Customer       @relation(fields: [customerId], references: [id])
+  customerId        String
+  total             Decimal
+  paymentMethod     PaymentMethod  @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId   String
+  shippingMethod    ShippingMethod @relation(fields: [shippingMethodId], references: [id])
+  shippingMethodId  String
+  orderStatus       OrderStatus    @relation(fields: [orderStatusId], references: [id])
+  orderStatusId     String
+  shippingAddress   Address        @relation(fields: [shippingAddressId], references: [id])
+  shippingAddressId String
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  OrderLine         OrderLine[]
+}
+
+model OrderLine {
+  id            String      @id @default(uuid())
+  productItem   ProductItem @relation(fields: [productItemId], references: [id])
+  productItemId String
+  order         Order       @relation(fields: [orderId], references: [id])
+  orderId       String
+  qty           Int
+  price         Decimal
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
