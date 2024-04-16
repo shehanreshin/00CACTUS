@@ -102,9 +102,14 @@ model Cart {
 }
 
 model CartItem {
-  id     String @id @default(uuid())
-  cart   Cart   @relation(fields: [cartId], references: [id])
-  cartId String
+  id            String      @id @default(uuid())
+  cart          Cart        @relation(fields: [cartId], references: [id])
+  cartId        String
+  productItem   ProductItem @relation(fields: [productItemId], references: [id])
+  productItemId String
+  qty           Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 model Category {
@@ -159,6 +164,7 @@ model ProductItem {
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
   ProductConfiguration ProductConfiguration[]
+  CartItem             CartItem[]
 }
 
 model ProductConfiguration {
