@@ -87,6 +87,7 @@ model Customer {
   Cart          Cart?
   PaymentMethod PaymentMethod[]
   Order         Order[]
+  Review        Review[]
 }
 
 model Staff {
@@ -262,4 +263,17 @@ model OrderLine {
   price         Decimal
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+  Review        Review[]
+}
+
+model Review {
+  id               String    @id @default(uuid())
+  customer         Customer  @relation(fields: [customerId], references: [id])
+  customerId       String
+  orderedProduct   OrderLine @relation(fields: [orderedProductId], references: [id])
+  orderedProductId String
+  rating           Int
+  comment          String
+
+  @@unique([customerId, orderedProductId])
 }
