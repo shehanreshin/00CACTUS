@@ -108,10 +108,28 @@ model CartItem {
 }
 
 model Category {
-  id               String     @id @default(uuid())
-  parentCategory   Category?  @relation("SubCategories", fields: [parentCategoryId], references: [id])
+  id               String      @id @default(uuid())
+  parentCategory   Category?   @relation("SubCategories", fields: [parentCategoryId], references: [id])
   parentCategoryId String?
-  subCategory      Category[] @relation("SubCategories")
-  name             String     @unique
-  createdAt        DateTime   @default(now())
+  subCategory      Category[]  @relation("SubCategories")
+  name             String      @unique
+  createdAt        DateTime    @default(now())
+  Variation        Variation[]
+}
+
+model Variation {
+  id              String            @id @default(uuid())
+  category        Category          @relation(fields: [categoryId], references: [id])
+  categoryId      String
+  name            String
+  createdAt       DateTime          @default(now())
+  VariationOption VariationOption[]
+}
+
+model VariationOption {
+  id          String    @id @default(uuid())
+  variation   Variation @relation(fields: [variationId], references: [id])
+  variationId String
+  value       String
+  createdAt   DateTime  @default(now())
 }
