@@ -115,6 +115,7 @@ model Category {
   name             String      @unique
   createdAt        DateTime    @default(now())
   Variation        Variation[]
+  Product          Product[]
 }
 
 model Variation {
@@ -127,9 +128,44 @@ model Variation {
 }
 
 model VariationOption {
-  id          String    @id @default(uuid())
-  variation   Variation @relation(fields: [variationId], references: [id])
-  variationId String
-  value       String
-  createdAt   DateTime  @default(now())
+  id                   String                 @id @default(uuid())
+  variation            Variation              @relation(fields: [variationId], references: [id])
+  variationId          String
+  value                String
+  createdAt            DateTime               @default(now())
+  ProductConfiguration ProductConfiguration[]
+}
+
+model Product {
+  id          String        @id @default(uuid())
+  category    Category      @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  name        String        @unique
+  description String
+  imagePath   String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  ProductItem ProductItem[]
+}
+
+model ProductItem {
+  id                   String                 @id @default(uuid())
+  product              Product                @relation(fields: [productId], references: [id])
+  productId            String
+  sku                  String                 @unique
+  qtyInStock           Int
+  price                Decimal
+  imagePath            String
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  ProductConfiguration ProductConfiguration[]
+}
+
+model ProductConfiguration {
+  productItem       ProductItem     @relation(fields: [productItemId], references: [id])
+  productItemId     String
+  variationOption   VariationOption @relation(fields: [variationOptionId], references: [id])
+  variationOptionId String
+
+  @@unique([productItemId, variationOptionId])
 }
