@@ -48,7 +48,7 @@ model Contact {
   country     Country  @relation(fields: [countryId], references: [id])
   countryId   String
   phoneNumber String
-  isDefault   Boolean
+  isDefault   Boolean  @default(false)
   updatedAt   DateTime @updatedAt
 
   @@unique([userId, phoneNumber])
@@ -76,14 +76,15 @@ model Country {
 }
 
 model Customer {
-  id        String   @id @default(uuid())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @unique
-  address   Address  @relation(fields: [addressId], references: [id])
-  addressId String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Cart      Cart?
+  id            String          @id @default(uuid())
+  user          User            @relation(fields: [userId], references: [id])
+  userId        String          @unique
+  address       Address         @relation(fields: [addressId], references: [id])
+  addressId     String          @unique
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  Cart          Cart?
+  PaymentMethod PaymentMethod[]
 }
 
 model Staff {
@@ -139,6 +140,8 @@ model VariationOption {
   value                String
   createdAt            DateTime               @default(now())
   ProductConfiguration ProductConfiguration[]
+
+  @@unique([variationId, value])
 }
 
 model Product {
@@ -174,4 +177,35 @@ model ProductConfiguration {
   variationOptionId String
 
   @@unique([productItemId, variationOptionId])
+}
+
+model PaymentType {
+  id            String            @id @default(uuid())
+  value         PaymentTypeOption @unique
+  PaymentMethod PaymentMethod[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+enum PaymentTypeOption {
+  CREDIT_CARD
+  DEBIT_CARD
+  PAYPAL
+  GOOGLE_PAY
+}
+
+model PaymentMethod {
+  id            String      @id @default(uuid())
+  customer      Customer    @relation(fields: [customerId], references: [id])
+  customerId    String
+  paymentType   PaymentType @relation(fields: [paymentTypeId], references: [id])
+  paymentTypeId String
+  provider      String
+  accountNumber String
+  expiryDate    DateTime    @db.Date
+  isDefault     Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([customerId, paymentTypeId, provider, accountNumber])
 }
