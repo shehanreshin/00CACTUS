@@ -42,13 +42,14 @@ enum UserStatus {
 }
 
 model Contact {
-  id          String  @id @default(uuid())
-  user        User    @relation(fields: [userId], references: [id])
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
   userId      String
-  country     Country @relation(fields: [countryId], references: [id])
+  country     Country  @relation(fields: [countryId], references: [id])
   countryId   String
   phoneNumber String
   isDefault   Boolean
+  updatedAt   DateTime @updatedAt
 
   @@unique([userId, phoneNumber])
 }
@@ -62,6 +63,7 @@ model Address {
   zipcode   String
   country   Country   @relation(fields: [countryId], references: [id])
   countryId String
+  updatedAt DateTime  @updatedAt
   Customer  Customer?
 }
 
@@ -74,15 +76,42 @@ model Country {
 }
 
 model Customer {
-  id        String  @id @default(uuid())
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String  @unique
-  address   Address @relation(fields: [addressId], references: [id])
-  addressId String  @unique
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
+  address   Address  @relation(fields: [addressId], references: [id])
+  addressId String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Cart      Cart?
 }
 
 model Staff {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cart {
+  id         String     @id @default(uuid())
+  customer   Customer   @relation(fields: [customerId], references: [id])
+  customerId String     @unique
+  CartItem   CartItem[]
+}
+
+model CartItem {
   id     String @id @default(uuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @unique
+  cart   Cart   @relation(fields: [cartId], references: [id])
+  cartId String
+}
+
+model Category {
+  id               String     @id @default(uuid())
+  parentCategory   Category?  @relation("SubCategories", fields: [parentCategoryId], references: [id])
+  parentCategoryId String?
+  subCategory      Category[] @relation("SubCategories")
+  name             String     @unique
+  createdAt        DateTime   @default(now())
 }
