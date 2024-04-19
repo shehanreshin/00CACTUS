@@ -1,14 +1,12 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { prisma } from 'src/database/prisma/client';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { UsersService } from './users.service';
 
-@Controller('api/v1/users')
+@Controller('users')
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
   @Post()
   async createUser(@Body() userDto: CreateUserDto) {
-    const user = await prisma.user.create({
-      data: userDto,
-    });
-    return user;
+    return this.usersService.createUser(userDto);
   }
 }
