@@ -4,13 +4,13 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class HasherBcryptService implements HasherService {
-  compare(password: string, hash: string) {
-    return bcrypt.compare(password, hash);
+  compare(password: string, hash: string): boolean {
+    return bcrypt.compareSync(password, hash);
   }
-  hash(password: string, salt: string) {
-    return bcrypt.hash(password, salt);
+  hash(password: string, salt: string): string {
+    return bcrypt.hashSync(password, salt);
   }
-  genSalt() {
-    return bcrypt.genSalt();
+  genSalt(): string {
+    return bcrypt.genSaltSync();
   }
 }

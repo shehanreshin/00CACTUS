@@ -1,5 +1,5 @@
 export abstract class HasherService {
-  abstract hash(password: string, salt: string);
-  abstract genSalt();
-  abstract compare(password: string, hash: string);
+  abstract hash(password: string, salt: string): string;
+  abstract genSalt(): string;
+  abstract compare(password: string, hash: string): boolean;
 }

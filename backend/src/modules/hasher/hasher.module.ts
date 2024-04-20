@@ -3,7 +3,7 @@ import { HasherService } from './hasher.service';
 import { HasherBcryptService } from './hasher-bcrypt.service';
 
 @Module({
-  exports: [HasherModule],
+  exports: [HasherService],
   providers: [
     {
       provide: HasherService,
