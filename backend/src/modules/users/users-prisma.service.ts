@@ -7,11 +7,11 @@ import { PrismaService } from '../prisma/prisma.service';
 export class UsersPrismaService implements UsersService {
   constructor(private readonly prisma: PrismaService) {}
   findAllUsers() {
-    throw new Error('Method not implemented.');
+    return this.prisma.user.findMany();
   }
 
   findUser(id: string) {
-    throw new Error('Method not implemented.');
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
   createUser(createUserDto: CreateUserDto) {
