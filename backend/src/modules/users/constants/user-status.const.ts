@@ -1,4 +1,4 @@
-const USER_STATUS = {
+export const USER_STATUS = {
   ACTIVE: 'ACTIVE',
   DISABLED: 'DISABLED',
   DELETED: 'DELETED',

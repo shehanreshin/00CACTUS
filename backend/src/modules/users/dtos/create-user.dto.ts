@@ -1,7 +1,12 @@
 import { USER_ROLE, UserRole } from '../constants/user-role.const';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, isEnum, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
-import { Type } from 'class-transformer';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateUserDto {
   @IsString()

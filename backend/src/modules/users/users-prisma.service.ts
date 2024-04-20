@@ -1,10 +1,11 @@
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
-import { prisma } from '../../database/prisma/client';
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UsersPrismaService implements UsersService {
+  constructor(private readonly prisma: PrismaService) {}
   findAllUsers() {
     throw new Error('Method not implemented.');
   }
@@ -14,7 +15,7 @@ export class UsersPrismaService implements UsersService {
   }
 
   createUser(createUserDto: CreateUserDto) {
-    return prisma.user.create({ data: createUserDto });
+    return this.prisma.user.create({ data: createUserDto });
   }
 
   deleteUser(id: string) {
