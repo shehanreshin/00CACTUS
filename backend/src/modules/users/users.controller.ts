@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { HasherService } from '../hasher/hasher.service';
 import { SaltsService } from '../salts/salts.service';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -12,13 +13,13 @@ export class UsersController {
     private readonly saltsService: SaltsService,
   ) {}
   @Post()
-  createUser(@Body() userDto: CreateUserDto) {
+  async createUser(@Body() userDto: CreateUserDto) {
     const salt = this.hasher.genSalt();
     userDto.password = this.hasher.hash(userDto.password, salt);
-    const savedUser = this.usersService.createUser(userDto);
+    const savedUser = await this.usersService.createUser(userDto);
 
     if (savedUser.id) {
-      this.saltsService.createSalt({
+      await this.saltsService.createSalt({
         userId: savedUser.id,
         salt: salt,
       });
@@ -35,5 +36,10 @@ export class UsersController {
   @Get(':id')
   findUser(@Param('id') id: string) {
     return this.usersService.findUser(id);
+  }
+
+  @Patch(':id')
+  updateUser(@Param('id') id: string, @Body() userDto: UpdateUserDto) {
+    return this.usersService.updateUser(id, userDto);
   }
 }

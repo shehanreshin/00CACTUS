@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api/v1');
 
   const apiDescription: string =
     "Welcome to the 00CACTUS API documentation. This resource is exclusively for developers within the 00CACTUS team. Here, you'll find detailed information on how to interact with our platform, including managing products, orders, and user data.";
@@ -21,7 +22,7 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
-  app.setGlobalPrefix('api/v1');
+
   await app.listen(5000);
 }
 

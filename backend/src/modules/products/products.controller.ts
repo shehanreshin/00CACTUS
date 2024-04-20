@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 
-@Controller('api/v1/products')
+@Controller('products')
 export class ProductsController {
   @Get()
   findAllProducts() {
