@@ -4,7 +4,9 @@ import { UsersService } from './users.service';
 import { HasherService } from '../hasher/hasher.service';
 import { SaltsService } from '../salts/salts.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(

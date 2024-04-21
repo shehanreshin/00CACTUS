@@ -1,5 +1,5 @@
 import { USER_ROLE, UserRole } from '../constants/user-role.const';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
   IsEmail,
   IsEnum,
@@ -11,25 +11,36 @@ import {
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({
+    example: 'Michael',
+    required: true,
+  })
   firstName: string;
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({
+    example: 'Scott',
+  })
   lastName: string;
 
   @IsEmail()
-  @ApiProperty()
+  @ApiProperty({
+    example: 'mscott@dundermifflin.org',
+  })
   email: string;
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({
+    example: 'scottstots',
+  })
   password: string;
 
   @IsEnum(USER_ROLE)
   @IsOptional()
-  @ApiProperty({ enum: USER_ROLE })
+  @ApiPropertyOptional({
+    enum: USER_ROLE,
+  })
   role: UserRole;
 }
