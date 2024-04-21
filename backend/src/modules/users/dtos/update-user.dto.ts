@@ -1,7 +1,7 @@
 import { USER_ROLE, UserRole } from '../constants/user-role.const';
 import { USER_STATUS, UserStatus } from '../constants/user-status.const';
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateUserDto {
   @IsString()

@@ -1,5 +1,5 @@
 import { USER_ROLE, UserRole } from '../constants/user-role.const';
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
   IsEnum,

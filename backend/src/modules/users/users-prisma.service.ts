@@ -25,7 +25,10 @@ export class UsersPrismaService implements UsersService {
   }
 
   permanentlyDisableUser(id: string) {
-    throw new Error('Method not implemented.');
+    return this.prisma.user.update({
+      where: { id },
+      data: { status: 'PERM_DISABLED' },
+    });
   }
 
   async updateUser(id: string, userDto: UpdateUserDto) {

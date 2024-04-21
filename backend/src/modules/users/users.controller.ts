@@ -14,6 +14,7 @@ export class UsersController {
     private readonly hasher: HasherService,
     private readonly saltsService: SaltsService,
   ) {}
+
   @Post()
   async createUser(@Body() userDto: CreateUserDto) {
     const salt = this.hasher.genSalt();
@@ -43,5 +44,10 @@ export class UsersController {
   @Patch(':id')
   updateUser(@Param('id') id: string, @Body() userDto: UpdateUserDto) {
     return this.usersService.updateUser(id, userDto);
+  }
+
+  @Patch(':id/disable')
+  permanentlyDisableUser(@Param('id') id: string) {
+    return this.usersService.permanentlyDisableUser(id);
   }
 }
