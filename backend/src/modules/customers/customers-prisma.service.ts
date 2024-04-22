@@ -4,6 +4,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UsersService } from '../users/users.service';
 import { AddressesService } from '../addresses/addresses.service';
+import { plainToInstance } from 'class-transformer';
+import { CustomerResponseDto } from './dto/customer-response.dto';
 
 @Injectable()
 export class CustomersPrismaService implements CustomersService {
@@ -19,13 +21,15 @@ export class CustomersPrismaService implements CustomersService {
       customerDto.address,
     );
 
-    return this.prisma.customer.create({
+    const customer = this.prisma.customer.create({
       data: { user: { connect: user }, address: { connect: address } },
       include: {
         user: true,
         address: true,
       },
     });
+
+    return plainToInstance(CustomerResponseDto, customer);
   }
 
   findAllCustomers() {
