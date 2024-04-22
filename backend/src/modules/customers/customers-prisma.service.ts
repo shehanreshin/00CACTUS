@@ -21,28 +21,68 @@ export class CustomersPrismaService implements CustomersService {
       customerDto.address,
     );
 
-    const customer = await this.prisma.customer.create({
-      data: { userId: user.id, addressId: address.id },
-      include: {
-        user: true,
-        address: {
-          include: {
-            country: true,
+    return plainToInstance(
+      CustomerResponseDto,
+      await this.prisma.customer.create({
+        data: { userId: user.id, addressId: address.id },
+        include: {
+          user: true,
+          address: {
+            include: {
+              country: true,
+            },
           },
         },
-      },
-    });
-
-    return plainToInstance(CustomerResponseDto, customer);
+      }),
+    );
   }
 
-  findAllCustomers() {
-    return this.prisma.customer.findMany();
+  async findAllCustomers() {
+    return plainToInstance(
+      CustomerResponseDto,
+      await this.prisma.customer.findMany({
+        include: {
+          user: true,
+          address: {
+            include: {
+              country: true,
+            },
+          },
+        },
+      }),
+    );
   }
-  findCustomer(id: string) {
-    return this.prisma.customer.findUnique({ where: { id } });
+  async findCustomer(id: string) {
+    return plainToInstance(
+      CustomerResponseDto,
+      await this.prisma.customer.findUnique({
+        where: { id },
+        include: {
+          user: true,
+          address: {
+            include: {
+              country: true,
+            },
+          },
+        },
+      }),
+    );
   }
-  findCustomerByUserId(userId: string) {
-    return this.prisma.customer.findUnique({ where: { userId } });
+
+  async findCustomerByUserId(userId: string) {
+    return plainToInstance(
+      CustomerResponseDto,
+      await this.prisma.customer.findUnique({
+        where: { userId },
+        include: {
+          user: true,
+          address: {
+            include: {
+              country: true,
+            },
+          },
+        },
+      }),
+    );
   }
 }
