@@ -8,7 +8,7 @@ import { ApiTags } from '@nestjs/swagger';
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
   @Post()
-  createCustomer(@Body() customerDto: CreateCustomerDto) {
+  async createCustomer(@Body() customerDto: CreateCustomerDto) {
     return this.customersService.createCustomer(
       customerDto.user,
       customerDto.address,

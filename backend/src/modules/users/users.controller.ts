@@ -1,34 +1,26 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Injectable,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
-import { HasherService } from '../hasher/hasher.service';
-import { SaltsService } from '../salts/salts.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
 @Controller('users')
+@Injectable()
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly hasher: HasherService,
-    private readonly saltsService: SaltsService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   async createUser(@Body() userDto: CreateUserDto) {
-    const salt = this.hasher.genSalt();
-    userDto.password = this.hasher.hash(userDto.password, salt);
-    const savedUser = await this.usersService.createUser(userDto);
-
-    if (savedUser.id) {
-      await this.saltsService.createSalt({
-        userId: savedUser.id,
-        salt: salt,
-      });
-    }
-
-    return savedUser;
+    return this.usersService.createUser(userDto);
   }
 
   @Get()

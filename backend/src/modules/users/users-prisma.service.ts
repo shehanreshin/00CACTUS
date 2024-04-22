@@ -3,10 +3,16 @@ import { UsersService } from './users.service';
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { HasherService } from '../hasher/hasher.service';
+import { SaltsService } from '../salts/salts.service';
 
 @Injectable()
 export class UsersPrismaService implements UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly hasher: HasherService,
+    private readonly saltsService: SaltsService,
+  ) {}
 
   findUserByEmail(email: string) {
     return this.prisma.user.findUnique({ where: { email } });
@@ -19,9 +25,19 @@ export class UsersPrismaService implements UsersService {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
-  createUser(userDto: CreateUserDto) {
-    console.log(userDto);
-    return this.prisma.user.create({ data: userDto });
+  async createUser(userDto: CreateUserDto) {
+    const salt = this.hasher.genSalt();
+    userDto.password = this.hasher.hash(userDto.password, salt);
+    const savedUser = await this.prisma.user.create({ data: userDto });
+
+    if (savedUser.id) {
+      await this.saltsService.createSalt({
+        userId: savedUser.id,
+        salt: salt,
+      });
+    }
+
+    return savedUser;
   }
 
   disableUser(id: string) {
