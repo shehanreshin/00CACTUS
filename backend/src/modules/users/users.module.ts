@@ -8,6 +8,7 @@ import { SaltsModule } from '../salts/salts.module';
 
 @Module({
   imports: [PrismaModule, HasherModule, SaltsModule],
+  exports: [UsersService],
   controllers: [UsersController],
   providers: [
     {

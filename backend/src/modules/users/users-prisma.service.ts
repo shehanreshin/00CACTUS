@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UsersPrismaService implements UsersService {
@@ -20,6 +21,7 @@ export class UsersPrismaService implements UsersService {
   }
 
   createUser(userDto: CreateUserDto) {
+    console.log(userDto);
     return this.prisma.user.create({ data: userDto });
   }
 

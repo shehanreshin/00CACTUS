@@ -61,7 +61,7 @@ model Address {
   line2     String
   city      String
   region    String
-  zipcode   String
+  zipCode   String
   country   Country   @relation(fields: [countryId], references: [id])
   countryId String
   updatedAt DateTime  @updatedAt
