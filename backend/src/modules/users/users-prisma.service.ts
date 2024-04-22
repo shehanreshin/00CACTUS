@@ -5,6 +5,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { HasherService } from '../hasher/hasher.service';
 import { SaltsService } from '../salts/salts.service';
+import { plainToInstance } from 'class-transformer';
+import { UserResponseDto } from './dtos/user-response.dto';
 
 @Injectable()
 export class UsersPrismaService implements UsersService {
@@ -37,7 +39,7 @@ export class UsersPrismaService implements UsersService {
       });
     }
 
-    return savedUser;
+    return plainToInstance(UserResponseDto, savedUser);
   }
 
   disableUser(id: string) {
