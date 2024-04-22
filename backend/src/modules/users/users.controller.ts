@@ -47,7 +47,7 @@ export class UsersController {
   }
 
   @Patch(':id/disable')
-  permanentlyDisableUser(@Param('id') id: string) {
-    return this.usersService.permanentlyDisableUser(id);
+  disableUser(@Param('id') id: string) {
+    return this.usersService.disableUser(id);
   }
 }

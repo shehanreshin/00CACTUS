@@ -38,8 +38,8 @@ enum UserRole {
 enum UserStatus {
   INACTIVE
   ACTIVE
-  TEMP_DISABLED
-  PERM_DISABLED
+  BANNED
+  DISABLED
 }
 
 model Contact {
