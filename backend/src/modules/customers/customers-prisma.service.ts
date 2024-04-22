@@ -1,14 +1,16 @@
 import { CustomersService } from './customers.service';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateUserDto } from '../users/dtos/create-user.dto';
+import { CreateAddressDto } from '../addresses/dto/create-address.dto';
 
 @Injectable()
 export class CustomersPrismaService implements CustomersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  createCustomer(userId: string, addressId: string) {
+  createCustomer(userDto: CreateUserDto, addressDto: CreateAddressDto) {
     return this.prisma.customer.create({
-      data: { userId, addressId },
+      data: { user: { create: userDto }, address: { create: addressDto } },
     });
   }
 
