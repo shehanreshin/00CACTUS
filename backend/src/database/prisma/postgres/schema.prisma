@@ -71,7 +71,7 @@ model Address {
 
 model Country {
   id      String    @id @default(uuid())
-  name    String
+  name    String    @unique
   code    String    @unique
   Contact Contact[]
   Address Address[]
