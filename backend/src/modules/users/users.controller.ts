@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Injectable,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post } from "@nestjs/common";
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -14,7 +6,6 @@ import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
 @Controller('users')
-@Injectable()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -29,17 +20,17 @@ export class UsersController {
   }
 
   @Get(':id')
-  findUser(@Param('id') id: string) {
+  findUser(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.usersService.findUser(id);
   }
 
   @Patch(':id')
-  updateUser(@Param('id') id: string, @Body() userDto: UpdateUserDto) {
+  updateUser(@Param('id', new ParseUUIDPipe()) id: string, @Body() userDto: UpdateUserDto) {
     return this.usersService.updateUser(id, userDto);
   }
 
   @Patch(':id/disable')
-  disableUser(@Param('id') id: string) {
+  disableUser(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.usersService.disableUser(id);
   }
 }
