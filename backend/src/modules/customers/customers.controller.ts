@@ -9,9 +9,6 @@ export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
   @Post()
   async createCustomer(@Body() customerDto: CreateCustomerDto) {
-    return this.customersService.createCustomer(
-      customerDto.user,
-      customerDto.address,
-    );
+    return this.customersService.createCustomer(customerDto);
   }
 }
