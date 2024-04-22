@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsNumberString, IsString, IsUUID } from 'class-validator';
-import { CountryDto } from '../../countries/dto/country.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateAddressDto {
@@ -27,7 +26,7 @@ export class CreateAddressDto {
   @ApiProperty()
   zipCode: string;
 
-  @IsString()
+  @IsUUID()
   @ApiProperty()
   countryId: string;
 }

@@ -3,7 +3,6 @@ import { UsersService } from './users.service';
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UsersPrismaService implements UsersService {

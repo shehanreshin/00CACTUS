@@ -1,6 +1,5 @@
 import { CustomersService } from './customers.service';
 import { Injectable } from '@nestjs/common';
-import { CreateCustomerDto } from './dto/create-customer.dto';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -9,7 +8,7 @@ export class CustomersPrismaService implements CustomersService {
 
   createCustomer(userId: string, addressId: string) {
     return this.prisma.customer.create({
-      data: { userId: userId, addressId: addressId },
+      data: { userId, addressId },
     });
   }
 
