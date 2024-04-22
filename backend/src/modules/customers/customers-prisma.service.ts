@@ -21,11 +21,15 @@ export class CustomersPrismaService implements CustomersService {
       customerDto.address,
     );
 
-    const customer = this.prisma.customer.create({
-      data: { user: { connect: user }, address: { connect: address } },
+    const customer = await this.prisma.customer.create({
+      data: { userId: user.id, addressId: address.id },
       include: {
         user: true,
-        address: true,
+        address: {
+          include: {
+            country: true,
+          },
+        },
       },
     });
 

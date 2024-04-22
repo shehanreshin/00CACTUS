@@ -1,6 +1,7 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { IsUUID, ValidateNested } from 'class-validator';
 import { UserResponseDto } from '../../users/dtos/user-response.dto';
+import { AddressResponseDto } from '../../addresses/dto/address-response.dto';
 
 export class CustomerResponseDto {
   @Expose()
@@ -21,7 +22,9 @@ export class CustomerResponseDto {
   addressId: string;
 
   @Expose()
-  address: any;
+  @Type(() => AddressResponseDto)
+  @ValidateNested()
+  address: AddressResponseDto;
 
   @Expose()
   createdAt: Date;
