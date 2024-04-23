@@ -5,27 +5,16 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  Post,
 } from '@nestjs/common';
-import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserResponseDto } from './dtos/user-response.dto';
 
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @ApiCreatedResponse({
-    description: 'The user details',
-    type: UserResponseDto,
-  })
-  @Post()
-  createUser(@Body() userDto: CreateUserDto) {
-    return this.usersService.createUser(userDto);
-  }
 
   @ApiOkResponse({
     description: 'The user details',

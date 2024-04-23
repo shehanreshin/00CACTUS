@@ -10,6 +10,7 @@ import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CustomersService } from './customers.service';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CustomerResponseDto } from './dto/customer-response.dto';
+import { OperationFailedException } from '../../common/exceptions/operation-failed.exception';
 
 @ApiTags('Customers')
 @Controller('customers')
@@ -22,6 +23,11 @@ export class CustomersController {
   })
   @Post()
   createCustomer(@Body() customerDto: CreateCustomerDto) {
+    if (customerDto.user.role !== 'CUSTOMER') {
+      throw new OperationFailedException(
+        'Admin or Staff cannot be created. Only Customer can be created.',
+      );
+    }
     return this.customersService.createCustomer(customerDto);
   }
 
