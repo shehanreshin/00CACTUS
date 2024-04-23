@@ -19,24 +19,24 @@ export class UsersPrismaService implements UsersService {
     private readonly saltsService: SaltsService,
   ) {}
 
-  async findUserByEmail(email: string) {
+  async findUserByEmail(email: string): Promise<UserResponseDto> {
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) throw new ResourceNotFoundException('User not found');
 
     return plainToInstance(UserResponseDto, user);
   }
-  async findAllUsers() {
+  async findAllUsers(): Promise<UserResponseDto[]> {
     return plainToInstance(UserResponseDto, await this.prisma.user.findMany());
   }
 
-  async findUser(id: string) {
+  async findUser(id: string): Promise<UserResponseDto> {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) throw new ResourceNotFoundException('User not found');
 
     return plainToInstance(UserResponseDto, user);
   }
 
-  async createUser(userDto: CreateUserDto) {
+  async createUser(userDto: CreateUserDto): Promise<UserResponseDto> {
     const salt = this.hasher.genSalt();
     userDto.password = this.hasher.hash(userDto.password, salt);
 
@@ -52,7 +52,7 @@ export class UsersPrismaService implements UsersService {
     return plainToInstance(UserResponseDto, savedUser);
   }
 
-  async disableUser(id: string) {
+  async disableUser(id: string): Promise<UserResponseDto> {
     await this.findUser(id);
 
     const user = await this.prisma.user.update({
@@ -64,7 +64,10 @@ export class UsersPrismaService implements UsersService {
     return plainToInstance(UserResponseDto, user);
   }
 
-  async updateUser(id: string, userDto: UpdateUserDto) {
+  async updateUser(
+    id: string,
+    userDto: UpdateUserDto,
+  ): Promise<UserResponseDto> {
     await this.findUser(id);
 
     const user = await this.prisma.user.update({

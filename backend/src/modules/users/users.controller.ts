@@ -23,7 +23,7 @@ export class UsersController {
     type: UserResponseDto,
   })
   @Post()
-  async createUser(@Body() userDto: CreateUserDto) {
+  createUser(@Body() userDto: CreateUserDto) {
     return this.usersService.createUser(userDto);
   }
 
