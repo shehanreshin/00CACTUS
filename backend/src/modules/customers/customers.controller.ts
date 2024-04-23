@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CustomersService } from './customers.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -15,5 +22,10 @@ export class CustomersController {
   @Get()
   async findAllCustomers() {
     return this.customersService.findAllCustomers();
+  }
+
+  @Get(':id')
+  async findCustomer(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.customersService.findCustomer(id);
   }
 }
