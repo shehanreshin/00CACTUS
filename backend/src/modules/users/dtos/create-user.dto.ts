@@ -6,7 +6,10 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
+import { CreateContactDto } from '../../contacts/dto/create-contact.dto';
+import { Type } from 'class-transformer';
 
 export class CreateUserDto {
   @IsString()
@@ -43,4 +46,9 @@ export class CreateUserDto {
     enum: USER_ROLE,
   })
   role: UserRole;
+
+  @ApiProperty({ isArray: true, type: CreateContactDto })
+  @Type(() => CreateContactDto)
+  @ValidateNested()
+  contacts: CreateContactDto[];
 }
