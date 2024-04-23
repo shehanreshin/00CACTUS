@@ -7,6 +7,7 @@ import { HasherService } from '../hasher/hasher.service';
 import { SaltsService } from '../salts/salts.service';
 import { plainToInstance } from 'class-transformer';
 import { UserResponseDto } from './dtos/user-response.dto';
+import { ResourceNotFoundException } from '../../common/exceptions/resource-not-found.exception';
 
 @Injectable()
 export class UsersPrismaService implements UsersService {
@@ -18,7 +19,7 @@ export class UsersPrismaService implements UsersService {
 
   async findUserByEmail(email: string) {
     const user = await this.prisma.user.findUnique({ where: { email } });
-    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    if (!user) throw new ResourceNotFoundException('User not found');
     return plainToInstance(UserResponseDto, user);
   }
   async findAllUsers() {
@@ -27,7 +28,7 @@ export class UsersPrismaService implements UsersService {
 
   async findUser(id: string) {
     const user = await this.prisma.user.findUnique({ where: { id } });
-    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    if (!user) throw new ResourceNotFoundException('User not found');
     return plainToInstance(UserResponseDto, user);
   }
 
@@ -38,7 +39,7 @@ export class UsersPrismaService implements UsersService {
 
     if (!savedUser.id) {
       throw new HttpException(
-        'User not saved',
+        'User not created',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -50,7 +51,7 @@ export class UsersPrismaService implements UsersService {
 
     if (!savedSalt.id) {
       throw new HttpException(
-        'Salt not saved',
+        'Salt not created',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
