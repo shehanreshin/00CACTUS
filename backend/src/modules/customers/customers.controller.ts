@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CustomersService } from './customers.service';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import { CustomerResponseDto } from "./dto/customer-response.dto";
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { CustomerResponseDto } from './dto/customer-response.dto';
 
 @ApiTags('Customers')
 @Controller('customers')
