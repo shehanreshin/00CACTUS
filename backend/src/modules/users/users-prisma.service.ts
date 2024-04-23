@@ -8,6 +8,7 @@ import { SaltsService } from '../salts/salts.service';
 import { plainToInstance } from 'class-transformer';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { ResourceNotFoundException } from '../../common/exceptions/resource-not-found.exception';
+import { CreationFailedException } from '../../common/exceptions/creation-failed.exception';
 
 @Injectable()
 export class UsersPrismaService implements UsersService {
@@ -37,24 +38,14 @@ export class UsersPrismaService implements UsersService {
     userDto.password = this.hasher.hash(userDto.password, salt);
     const savedUser = await this.prisma.user.create({ data: userDto });
 
-    if (!savedUser.id) {
-      throw new HttpException(
-        'User not created',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    if (!savedUser.id) throw new CreationFailedException('User not created');
 
     const savedSalt = await this.saltsService.createSalt({
       userId: savedUser.id,
       salt: salt,
     });
 
-    if (!savedSalt.id) {
-      throw new HttpException(
-        'Salt not created',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    if (!savedSalt.id) throw new CreationFailedException('Salt not created');
 
     return plainToInstance(UserResponseDto, savedUser);
   }
