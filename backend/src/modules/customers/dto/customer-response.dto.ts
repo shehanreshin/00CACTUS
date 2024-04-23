@@ -7,12 +7,11 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CustomerResponseDto {
   @Expose()
   @IsUUID()
-  @ApiProperty()
+  @ApiProperty({ example: '2c03fe0a-afe5-4b13-8bf1-6a7787017515' })
   id: string;
 
   @Exclude()
   @IsUUID()
-  @ApiProperty()
   userId: string;
 
   @Expose()
@@ -23,7 +22,6 @@ export class CustomerResponseDto {
 
   @Exclude()
   @IsUUID()
-  @ApiProperty()
   addressId: string;
 
   @Expose()
@@ -32,13 +30,11 @@ export class CustomerResponseDto {
   @ApiProperty()
   address: AddressResponseDto;
 
-  @Expose()
+  @Exclude()
   @IsDate()
-  @ApiProperty()
   createdAt: Date;
 
-  @Expose()
+  @Exclude()
   @IsDate()
-  @ApiProperty()
   updatedAt: Date;
 }

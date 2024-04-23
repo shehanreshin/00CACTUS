@@ -37,7 +37,6 @@ export class UserResponseDto {
   @Exclude()
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ example: 'scottstots' })
   password: string;
 
   @Expose()
@@ -50,13 +49,11 @@ export class UserResponseDto {
   @ApiProperty({ enum: USER_STATUS })
   status: UserStatus;
 
-  @Expose()
+  @Exclude()
   @IsDate()
-  @ApiProperty()
   createdAt: Date;
 
-  @Expose()
+  @Exclude()
   @IsDate()
-  @ApiProperty()
   updatedAt: Date;
 }
