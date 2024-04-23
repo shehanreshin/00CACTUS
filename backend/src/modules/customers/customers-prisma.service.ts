@@ -9,6 +9,17 @@ import { CustomerResponseDto } from './dto/customer-response.dto';
 
 @Injectable()
 export class CustomersPrismaService implements CustomersService {
+  private readonly allRelationsPrismaArgs = {
+    include: {
+      user: true,
+      address: {
+        include: {
+          country: true,
+        },
+      },
+    },
+  };
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly usersService: UsersService,
@@ -27,14 +38,7 @@ export class CustomersPrismaService implements CustomersService {
       CustomerResponseDto,
       await this.prisma.customer.create({
         data: { userId: user.id, addressId: address.id },
-        include: {
-          user: true,
-          address: {
-            include: {
-              country: true,
-            },
-          },
-        },
+        ...this.allRelationsPrismaArgs,
       }),
     );
   }
@@ -42,16 +46,7 @@ export class CustomersPrismaService implements CustomersService {
   async findAllCustomers(): Promise<CustomerResponseDto[]> {
     return plainToInstance(
       CustomerResponseDto,
-      await this.prisma.customer.findMany({
-        include: {
-          user: true,
-          address: {
-            include: {
-              country: true,
-            },
-          },
-        },
-      }),
+      await this.prisma.customer.findMany({ ...this.allRelationsPrismaArgs }),
     );
   }
 
@@ -60,14 +55,7 @@ export class CustomersPrismaService implements CustomersService {
       CustomerResponseDto,
       await this.prisma.customer.findUnique({
         where: { id },
-        include: {
-          user: true,
-          address: {
-            include: {
-              country: true,
-            },
-          },
-        },
+        ...this.allRelationsPrismaArgs,
       }),
     );
   }
@@ -77,14 +65,7 @@ export class CustomersPrismaService implements CustomersService {
       CustomerResponseDto,
       await this.prisma.customer.findUnique({
         where: { userId },
-        include: {
-          user: true,
-          address: {
-            include: {
-              country: true,
-            },
-          },
-        },
+        ...this.allRelationsPrismaArgs,
       }),
     );
   }

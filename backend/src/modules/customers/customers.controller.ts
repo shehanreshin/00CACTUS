@@ -21,7 +21,7 @@ export class CustomersController {
     type: CustomerResponseDto,
   })
   @Post()
-  async createCustomer(@Body() customerDto: CreateCustomerDto) {
+  createCustomer(@Body() customerDto: CreateCustomerDto) {
     return this.customersService.createCustomer(customerDto);
   }
 
@@ -31,7 +31,7 @@ export class CustomersController {
     isArray: true,
   })
   @Get()
-  async findAllCustomers() {
+  findAllCustomers() {
     return this.customersService.findAllCustomers();
   }
 
@@ -40,7 +40,7 @@ export class CustomersController {
     type: CustomerResponseDto,
   })
   @Get(':id')
-  async findCustomer(@Param('id', new ParseUUIDPipe()) id: string) {
+  findCustomer(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.customersService.findCustomer(id);
   }
 
@@ -49,7 +49,7 @@ export class CustomersController {
     type: CustomerResponseDto,
   })
   @Get('users/:id')
-  async findCustomerByUserId(@Param('id', new ParseUUIDPipe()) id: string) {
+  findCustomerByUserId(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.customersService.findCustomerByUserId(id);
   }
 }
