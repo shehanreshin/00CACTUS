@@ -6,36 +6,54 @@ import {
   Transform,
   Type,
 } from 'class-transformer';
-import { ValidateNested } from 'class-validator';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsNumberString,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from 'class-validator';
 
 export class AddressResponseDto {
   @Expose()
+  @IsUUID()
   id: string;
 
   @Expose()
+  @IsString()
+  @IsNotEmpty()
   line1: string;
 
   @Expose()
+  @IsString()
+  @IsNotEmpty()
   line2: string;
 
   @Expose()
+  @IsString()
+  @IsNotEmpty()
   city: string;
 
   @Expose()
+  @IsString()
+  @IsNotEmpty()
   region: string;
 
   @Expose()
+  @IsNumberString()
   zipCode: string;
 
   @Exclude()
+  @IsUUID()
   countryId: string;
 
   @Expose()
   @Type(() => CountryResponseDto)
   @ValidateNested()
-  @Transform((c) => plainToInstance(CountryResponseDto, c.obj.country))
   country: CountryResponseDto;
 
   @Expose()
+  @IsDate()
   updatedAt: Date;
 }

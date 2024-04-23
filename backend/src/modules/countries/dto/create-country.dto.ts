@@ -6,6 +6,5 @@ export class CreateCountryDto {
   name: string;
 
   @IsNumberString()
-  @IsNotEmpty()
   code: string;
 }
