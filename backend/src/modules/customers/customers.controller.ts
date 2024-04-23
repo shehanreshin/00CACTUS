@@ -23,7 +23,7 @@ export class CustomersController {
   })
   @Post()
   createCustomer(@Body() customerDto: CreateCustomerDto) {
-    if (customerDto.user.role !== 'CUSTOMER') {
+    if (customerDto.user.role && customerDto.user.role !== 'CUSTOMER') {
       throw new OperationFailedException(
         'Admin or Staff cannot be created. Only Customer can be created.',
       );
