@@ -7,6 +7,7 @@ import { CustomersModule } from './modules/customers/customers.module';
 import { StaffModule } from './modules/staff/staff.module';
 import { AddressesModule } from './modules/addresses/addresses.module';
 import { CountriesModule } from './modules/countries/countries.module';
+import { ContactsModule } from './modules/contacts/contacts.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { CountriesModule } from './modules/countries/countries.module';
     StaffModule,
     AddressesModule,
     CountriesModule,
+    ContactsModule,
   ],
 })
 export class AppModule {}
