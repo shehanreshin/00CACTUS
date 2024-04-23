@@ -1,6 +1,6 @@
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { HasherService } from '../hasher/hasher.service';
@@ -16,15 +16,19 @@ export class UsersPrismaService implements UsersService {
     private readonly saltsService: SaltsService,
   ) {}
 
-  findUserByEmail(email: string) {
-    return this.prisma.user.findUnique({ where: { email } });
+  async findUserByEmail(email: string) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    return plainToInstance(UserResponseDto, user);
   }
-  findAllUsers() {
-    return this.prisma.user.findMany();
+  async findAllUsers() {
+    return plainToInstance(UserResponseDto, await this.prisma.user.findMany());
   }
 
-  findUser(id: string) {
-    return this.prisma.user.findUnique({ where: { id } });
+  async findUser(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    return plainToInstance(UserResponseDto, user);
   }
 
   async createUser(userDto: CreateUserDto) {
@@ -32,26 +36,59 @@ export class UsersPrismaService implements UsersService {
     userDto.password = this.hasher.hash(userDto.password, salt);
     const savedUser = await this.prisma.user.create({ data: userDto });
 
-    if (savedUser.id) {
-      await this.saltsService.createSalt({
-        userId: savedUser.id,
-        salt: salt,
-      });
+    if (!savedUser.id) {
+      throw new HttpException(
+        'User not saved',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const savedSalt = await this.saltsService.createSalt({
+      userId: savedUser.id,
+      salt: salt,
+    });
+
+    if (!savedSalt.id) {
+      throw new HttpException(
+        'Salt not saved',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     return plainToInstance(UserResponseDto, savedUser);
   }
 
-  disableUser(id: string) {
-    return this.prisma.user.update({
+  async disableUser(id: string) {
+    await this.findUser(id);
+    const user = await this.prisma.user.update({
       where: { id },
       data: { status: 'DISABLED' },
     });
+
+    if (!user) {
+      throw new HttpException(
+        'User not disabled',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return plainToInstance(UserResponseDto, user);
   }
 
   async updateUser(id: string, userDto: UpdateUserDto) {
-    const user = await this.findUser(id);
-    if (!user) throw new HttpException('User not found!', 404);
-    return this.prisma.user.update({ where: { id }, data: userDto });
+    await this.findUser(id);
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: userDto,
+    });
+
+    if (!user) {
+      throw new HttpException(
+        'User not updated',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return plainToInstance(UserResponseDto, user);
   }
 }
