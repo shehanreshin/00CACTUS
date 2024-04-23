@@ -28,4 +28,9 @@ export class CustomersController {
   async findCustomer(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.customersService.findCustomer(id);
   }
+
+  @Get('users/:id')
+  async findCustomerByUserId(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.customersService.findCustomerByUserId(id);
+  }
 }
