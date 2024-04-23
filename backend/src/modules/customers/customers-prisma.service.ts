@@ -15,7 +15,9 @@ export class CustomersPrismaService implements CustomersService {
     private readonly addressesService: AddressesService,
   ) {}
 
-  async createCustomer(customerDto: CreateCustomerDto) {
+  async createCustomer(
+    customerDto: CreateCustomerDto,
+  ): Promise<CustomerResponseDto> {
     const user = await this.usersService.createUser(customerDto.user);
     const address = await this.addressesService.createAddress(
       customerDto.address,
@@ -37,7 +39,7 @@ export class CustomersPrismaService implements CustomersService {
     );
   }
 
-  async findAllCustomers() {
+  async findAllCustomers(): Promise<CustomerResponseDto[]> {
     return plainToInstance(
       CustomerResponseDto,
       await this.prisma.customer.findMany({
@@ -52,7 +54,8 @@ export class CustomersPrismaService implements CustomersService {
       }),
     );
   }
-  async findCustomer(id: string) {
+
+  async findCustomer(id: string): Promise<CustomerResponseDto> {
     return plainToInstance(
       CustomerResponseDto,
       await this.prisma.customer.findUnique({
@@ -69,7 +72,7 @@ export class CustomersPrismaService implements CustomersService {
     );
   }
 
-  async findCustomerByUserId(userId: string) {
+  async findCustomerByUserId(userId: string): Promise<CustomerResponseDto> {
     return plainToInstance(
       CustomerResponseDto,
       await this.prisma.customer.findUnique({
