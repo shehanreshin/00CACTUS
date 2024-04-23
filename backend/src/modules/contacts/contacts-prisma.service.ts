@@ -3,6 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ResourceNotFoundException } from '../../common/exceptions/resource-not-found.exception';
+import { CreationFailedException } from '../../common/exceptions/creation-failed.exception';
+import { plainToInstance } from 'class-transformer';
+import { ContactResponseDto } from './dto/contact-response.dto';
 
 @Injectable()
 export class ContactsPrismaService implements ContactsService {
@@ -19,7 +22,18 @@ export class ContactsPrismaService implements ContactsService {
 
     return `${contact.country.code}${contact.phoneNumber}`;
   }
-  createContacts(userId: string, contactDtos: CreateContactDto[]) {
-    throw new Error('Method not implemented.');
+  async createContacts(userId: string, contactDtos: CreateContactDto[]) {
+    const contacts = [];
+    for (const { isDefault, phoneNumber, country } of contactDtos) {
+      const contact = await this.prisma.contact.create({
+        data: { userId, countryId: country.id, isDefault, phoneNumber },
+        include: { country: true },
+      });
+      if (!country) throw new CreationFailedException('Contact not created');
+
+      contacts.push(contact);
+    }
+
+    return plainToInstance(ContactResponseDto, contacts);
   }
 }

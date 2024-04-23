@@ -39,12 +39,12 @@ export class ContactResponseDto {
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({example: '761237431'})
+  @ApiProperty({ example: '761237431' })
   @Expose()
   phoneNumber: string;
 
   @IsBoolean()
-  @ApiProperty({example: true})
+  @ApiProperty({ example: true })
   @Expose()
   isDefault: boolean;
 
