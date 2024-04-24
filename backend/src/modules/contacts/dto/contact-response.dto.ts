@@ -19,8 +19,7 @@ export class ContactResponseDto {
 
   @Type(() => UserResponseDto)
   @ValidateNested()
-  @ApiProperty()
-  @Expose()
+  @Exclude()
   user: UserResponseDto;
 
   @IsUUID()

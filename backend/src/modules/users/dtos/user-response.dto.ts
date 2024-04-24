@@ -1,6 +1,6 @@
 import { USER_ROLE, UserRole } from '../constants/user-role.const';
 import { USER_STATUS, UserStatus } from '../constants/user-status.const';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 import {
   IsDate,
   IsEmail,
@@ -8,8 +8,10 @@ import {
   IsNotEmpty,
   IsString,
   IsUUID,
+  ValidateNested,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { ContactResponseDto } from '../../contacts/dto/contact-response.dto';
 
 export class UserResponseDto {
   @Expose()
@@ -48,6 +50,12 @@ export class UserResponseDto {
   @IsEnum(USER_STATUS)
   @ApiProperty({ enum: USER_STATUS })
   status: UserStatus;
+
+  @Expose()
+  @ApiProperty({ isArray: true, type: ContactResponseDto })
+  @Type(() => ContactResponseDto)
+  @ValidateNested()
+  contacts: ContactResponseDto[];
 
   @Exclude()
   @IsDate()

@@ -10,6 +10,8 @@ import { UserResponseDto } from './dtos/user-response.dto';
 import { ResourceNotFoundException } from '../../common/exceptions/resource-not-found.exception';
 import { CreationFailedException } from '../../common/exceptions/creation-failed.exception';
 import { OperationFailedException } from '../../common/exceptions/operation-failed.exception';
+import { ContactsService } from '../contacts/contacts.service';
+import { ContactResponseDto } from '../contacts/dto/contact-response.dto';
 
 @Injectable()
 export class UsersPrismaService implements UsersService {
@@ -17,6 +19,7 @@ export class UsersPrismaService implements UsersService {
     private readonly prisma: PrismaService,
     private readonly hasher: HasherService,
     private readonly saltsService: SaltsService,
+    private readonly contactsService: ContactsService,
   ) {}
 
   async findUserByEmail(email: string): Promise<UserResponseDto> {
@@ -40,7 +43,9 @@ export class UsersPrismaService implements UsersService {
     const salt = this.hasher.genSalt();
     userDto.password = this.hasher.hash(userDto.password, salt);
 
-    const savedUser = await this.prisma.user.create({ data: userDto });
+    const { contacts, ...user } = userDto;
+
+    const savedUser = await this.prisma.user.create({ data: user });
     if (!savedUser.id) throw new CreationFailedException('User not created');
 
     const savedSalt = await this.saltsService.createSalt({
@@ -49,7 +54,15 @@ export class UsersPrismaService implements UsersService {
     });
     if (!savedSalt.id) throw new CreationFailedException('Salt not created');
 
-    return plainToInstance(UserResponseDto, savedUser);
+    const savedContacts = await this.contactsService.createContacts(
+      savedUser.id,
+      contacts,
+    );
+
+    const responseDto = plainToInstance(UserResponseDto, savedUser);
+    responseDto.contacts = savedContacts;
+
+    return responseDto;
   }
 
   async disableUser(id: string): Promise<UserResponseDto> {

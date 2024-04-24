@@ -22,14 +22,19 @@ export class ContactsPrismaService implements ContactsService {
 
     return `${contact.country.code}${contact.phoneNumber}`;
   }
+
   async createContacts(userId: string, contactDtos: CreateContactDto[]) {
     const contacts = [];
     for (const { isDefault, phoneNumber, country } of contactDtos) {
       const contact = await this.prisma.contact.create({
-        data: { userId, countryId: country.id, isDefault, phoneNumber },
-        include: { country: true },
+        data: {
+          user: { connect: { id: userId } },
+          country: { connect: { id: country.id } },
+          isDefault: isDefault,
+          phoneNumber: phoneNumber,
+        },
       });
-      if (!country) throw new CreationFailedException('Contact not created');
+      if (!contact) throw new CreationFailedException('Contact not created');
 
       contacts.push(contact);
     }

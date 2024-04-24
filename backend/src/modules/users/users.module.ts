@@ -5,9 +5,10 @@ import { UsersPrismaService } from './users-prisma.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { HasherModule } from '../hasher/hasher.module';
 import { SaltsModule } from '../salts/salts.module';
+import { ContactsModule } from '../contacts/contacts.module';
 
 @Module({
-  imports: [PrismaModule, HasherModule, SaltsModule],
+  imports: [PrismaModule, HasherModule, SaltsModule, ContactsModule],
   exports: [UsersService],
   controllers: [UsersController],
   providers: [
