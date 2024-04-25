@@ -51,7 +51,7 @@ export class UserResponseDto {
   @ApiProperty({ enum: USER_STATUS })
   status: UserStatus;
 
-  @Expose()
+  @Expose({ name: 'Contact' })
   @ApiProperty({ isArray: true, type: ContactResponseDto })
   @Type(() => ContactResponseDto)
   @ValidateNested()

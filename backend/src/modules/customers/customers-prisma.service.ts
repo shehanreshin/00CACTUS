@@ -13,7 +13,15 @@ import { ResourceNotFoundException } from '../../common/exceptions/resource-not-
 export class CustomersPrismaService implements CustomersService {
   private readonly allRelationsPrismaArgs = {
     include: {
-      user: true,
+      user: {
+        include: {
+          Contact: {
+            include: {
+              country: true,
+            },
+          },
+        },
+      },
       address: {
         include: {
           country: true,
@@ -37,7 +45,10 @@ export class CustomersPrismaService implements CustomersService {
     );
 
     const customer = await this.prisma.customer.create({
-      data: { userId: user.id, addressId: address.id },
+      data: {
+        user: { connect: { id: user.id } },
+        address: { connect: { id: address.id } },
+      },
       ...this.allRelationsPrismaArgs,
     });
     if (!customer.id) throw new CreationFailedException('Customer not created');

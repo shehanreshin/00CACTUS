@@ -33,6 +33,9 @@ export class ContactsPrismaService implements ContactsService {
           isDefault: isDefault,
           phoneNumber: phoneNumber,
         },
+        include: {
+          country: true,
+        },
       });
       if (!contact) throw new CreationFailedException('Contact not created');
 
