@@ -1,4 +1,4 @@
 export abstract class CartsService {
-  abstract createCart(userId: string);
-  abstract findCartByUserId(userId: string);
+  abstract createCart(customerId: string);
+  abstract findCartByCustomerId(customerId: string);
 }
