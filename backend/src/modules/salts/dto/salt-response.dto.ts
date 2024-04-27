@@ -12,7 +12,7 @@ export class SaltResponseDto {
   @Expose()
   @Type(() => UserResponseDto)
   @ValidateNested()
-  @ApiProperty({type: UserResponseDto})
+  @ApiProperty({ type: UserResponseDto })
   user: UserResponseDto;
 
   @Exclude()

@@ -28,7 +28,7 @@ export class ContactResponseDto {
 
   @Type(() => CountryResponseDto)
   @ValidateNested()
-  @ApiProperty({type: CountryResponseDto})
+  @ApiProperty({ type: CountryResponseDto })
   @Expose()
   country: CountryResponseDto;
 

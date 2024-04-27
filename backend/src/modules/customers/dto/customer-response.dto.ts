@@ -17,7 +17,7 @@ export class CustomerResponseDto {
   @Expose()
   @Type(() => UserResponseDto)
   @ValidateNested()
-  @ApiProperty({type: UserResponseDto})
+  @ApiProperty({ type: UserResponseDto })
   user: UserResponseDto;
 
   @Exclude()
@@ -27,7 +27,7 @@ export class CustomerResponseDto {
   @Expose()
   @Type(() => AddressResponseDto)
   @ValidateNested()
-  @ApiProperty({type: AddressResponseDto})
+  @ApiProperty({ type: AddressResponseDto })
   address: AddressResponseDto;
 
   @Exclude()
