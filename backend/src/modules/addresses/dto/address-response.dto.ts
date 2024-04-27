@@ -52,7 +52,7 @@ export class AddressResponseDto {
   @Expose()
   @Type(() => CountryResponseDto)
   @ValidateNested()
-  @ApiProperty()
+  @ApiProperty({type: CountryResponseDto})
   country: CountryResponseDto;
 
   @Exclude()

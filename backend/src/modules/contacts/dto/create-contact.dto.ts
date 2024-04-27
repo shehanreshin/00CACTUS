@@ -6,7 +6,7 @@ import { IsBoolean, IsNumberString, ValidateNested } from 'class-validator';
 export class CreateContactDto {
   @Type(() => CountryResponseDto)
   @ValidateNested()
-  @ApiProperty()
+  @ApiProperty({type: CountryResponseDto})
   country: CountryResponseDto;
 
   @IsNumberString()

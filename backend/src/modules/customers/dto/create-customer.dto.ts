@@ -5,12 +5,12 @@ import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 
 export class CreateCustomerDto {
-  @ApiProperty()
+  @ApiProperty({type: CreateUserDto})
   @Type(() => CreateUserDto)
   @ValidateNested()
   user: CreateUserDto;
 
-  @ApiProperty()
+  @ApiProperty({type: CreateAddressDto})
   @Type(() => CreateAddressDto)
   @ValidateNested()
   address: CreateAddressDto;
