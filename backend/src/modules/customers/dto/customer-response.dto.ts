@@ -3,6 +3,7 @@ import { IsDate, IsUUID, ValidateNested } from 'class-validator';
 import { UserResponseDto } from '../../users/dtos/user-response.dto';
 import { AddressResponseDto } from '../../addresses/dto/address-response.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { CartResponseDto } from '../../carts/dto/cart-response.dto';
 
 export class CustomerResponseDto {
   @Expose()
@@ -29,6 +30,12 @@ export class CustomerResponseDto {
   @ValidateNested()
   @ApiProperty({ type: AddressResponseDto })
   address: AddressResponseDto;
+
+  @Expose({ name: 'Cart' })
+  @Type(() => CartResponseDto)
+  @ValidateNested()
+  @ApiProperty({ type: CartResponseDto })
+  cart: CartResponseDto;
 
   @Exclude()
   @IsDate()

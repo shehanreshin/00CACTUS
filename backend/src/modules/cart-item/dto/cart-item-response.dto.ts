@@ -26,7 +26,7 @@ export class CartItemResponseDto {
 
   @Expose()
   @ApiProperty()
-  productItem: string;
+  productItem: any;
 
   @Exclude()
   @IsUUID()

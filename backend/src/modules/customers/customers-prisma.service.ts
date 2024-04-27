@@ -8,6 +8,7 @@ import { plainToInstance } from 'class-transformer';
 import { CustomerResponseDto } from './dto/customer-response.dto';
 import { CreationFailedException } from '../../common/exceptions/creation-failed.exception';
 import { ResourceNotFoundException } from '../../common/exceptions/resource-not-found.exception';
+import { CartsService } from '../carts/carts.service';
 
 @Injectable()
 export class CustomersPrismaService implements CustomersService {
@@ -27,6 +28,11 @@ export class CustomersPrismaService implements CustomersService {
           country: true,
         },
       },
+      Cart: {
+        include: {
+          CartItem: true,
+        },
+      },
     },
   };
 
@@ -34,6 +40,7 @@ export class CustomersPrismaService implements CustomersService {
     private readonly prisma: PrismaService,
     private readonly usersService: UsersService,
     private readonly addressesService: AddressesService,
+    private readonly cartsService: CartsService,
   ) {}
 
   async createCustomer(
@@ -53,7 +60,10 @@ export class CustomersPrismaService implements CustomersService {
     });
     if (!customer.id) throw new CreationFailedException('Customer not created');
 
-    return plainToInstance(CustomerResponseDto, customer);
+    const response = plainToInstance(CustomerResponseDto, customer);
+    response.cart = await this.cartsService.createCart(customer.id);
+
+    return response;
   }
 
   async findAllCustomers(): Promise<CustomerResponseDto[]> {

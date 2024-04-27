@@ -11,7 +11,6 @@ import { ResourceNotFoundException } from '../../common/exceptions/resource-not-
 import { CreationFailedException } from '../../common/exceptions/creation-failed.exception';
 import { OperationFailedException } from '../../common/exceptions/operation-failed.exception';
 import { ContactsService } from '../contacts/contacts.service';
-import { ContactResponseDto } from '../contacts/dto/contact-response.dto';
 
 @Injectable()
 export class UsersPrismaService implements UsersService {
