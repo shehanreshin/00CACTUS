@@ -1,5 +1,5 @@
-import { ExceptionFilter, Catch, ArgumentsHost } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import { Response } from 'express';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Catch(PrismaClientKnownRequestError)
@@ -7,12 +7,17 @@ export class PrismaExceptionFilter implements ExceptionFilter {
   catch(exception: PrismaClientKnownRequestError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    let message = 'Operation failed';
+    const error = 'Invalid Data Submission';
+
+    if (exception.code === 'P2002') {
+      message = `The submitted data does not meet the required uniqueness criteria on field ${exception.meta.target}`;
+    }
 
     response.status(500).json({
+      message: message,
+      error: error,
       statusCode: 500,
-      timestamp: new Date().toISOString(),
-      path: request.url,
     });
   }
 }
