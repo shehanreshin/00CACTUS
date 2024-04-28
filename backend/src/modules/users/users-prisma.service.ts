@@ -12,6 +12,7 @@ import { CreationFailedException } from '../../common/exceptions/creation-failed
 import { OperationFailedException } from '../../common/exceptions/operation-failed.exception';
 import { ContactsService } from '../contacts/contacts.service';
 import { InvalidPasswordException } from '../../common/exceptions/invalid-password.exception';
+import { UnregisteredEmailException } from '../../common/exceptions/unregistered-email.exception';
 
 @Injectable()
 export class UsersPrismaService implements UsersService {
@@ -26,11 +27,10 @@ export class UsersPrismaService implements UsersService {
     email: string,
     password: string,
   ): Promise<UserResponseDto> {
-    const user = await this.prisma.user.findUnique({where: {email}});
-    if (!user) throw new ResourceNotFoundException('User not found');
-    const salt = await this.saltsService.findSaltByUserId(user.id);
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) throw new UnregisteredEmailException();
 
-    if (this.hasher.compare(password, user.password)) {
+    if (!this.hasher.compare(password, user.password)) {
       throw new InvalidPasswordException();
     }
 

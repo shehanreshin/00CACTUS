@@ -19,9 +19,10 @@ export class AuthPrismaService implements AuthService {
 
     switch (user.role) {
       case 'CUSTOMER':
-        return this.jwtService.sign(
-          this.customersService.findCustomerByUserId(user.id),
+        const customer = await this.customersService.findCustomerByUserId(
+          user.id,
         );
+        return this.jwtService.sign({ ...customer });
     }
   }
 
