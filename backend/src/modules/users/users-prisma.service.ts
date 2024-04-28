@@ -11,6 +11,7 @@ import { ResourceNotFoundException } from '../../common/exceptions/resource-not-
 import { CreationFailedException } from '../../common/exceptions/creation-failed.exception';
 import { OperationFailedException } from '../../common/exceptions/operation-failed.exception';
 import { ContactsService } from '../contacts/contacts.service';
+import { InvalidLoginCredentialsException } from '../../common/exceptions/invalid-login-credentials.exception';
 
 @Injectable()
 export class UsersPrismaService implements UsersService {
@@ -20,6 +21,20 @@ export class UsersPrismaService implements UsersService {
     private readonly saltsService: SaltsService,
     private readonly contactsService: ContactsService,
   ) {}
+
+  async findUserByEmailAndPassword(
+    email: string,
+    password: string,
+  ): Promise<UserResponseDto> {
+    const user = await this.findUserByEmail(email);
+    const salt = await this.saltsService.findSaltByUserId(user.id);
+
+    if (this.hasher.hash(password, salt) !== user.password) {
+      throw new InvalidLoginCredentialsException();
+    }
+
+    return plainToInstance(UserResponseDto, user);
+  }
 
   async findUserByEmail(email: string): Promise<UserResponseDto> {
     const user = await this.prisma.user.findUnique({ where: { email } });

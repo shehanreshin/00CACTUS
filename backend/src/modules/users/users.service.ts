@@ -12,4 +12,8 @@ export abstract class UsersService {
     userDto: UpdateUserDto,
   ): Promise<UserResponseDto>;
   abstract findUserByEmail(email: string): Promise<UserResponseDto>;
+  abstract findUserByEmailAndPassword(
+    email: string,
+    password: string,
+  ): Promise<UserResponseDto>;
 }

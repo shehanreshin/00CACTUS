@@ -1,3 +1,5 @@
+import { LoginCredentialsDto } from './dto/login-credentials.dto';
+
 export abstract class AuthService {
-  abstract validateUserCredentials();
+  abstract validateLoginCredentials(credentials: LoginCredentialsDto);
 }
