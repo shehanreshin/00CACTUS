@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-export class InvalidLoginCredentialsException extends HttpException {
+export class InvalidPasswordException extends HttpException {
   constructor() {
     super('Invalid login credentials', HttpStatus.FORBIDDEN);
   }
