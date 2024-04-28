@@ -3,22 +3,34 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginCredentialsDto } from './dto/login-credentials.dto';
 import { CustomersService } from '../customers/customers.service';
+import { JwtService } from '@nestjs/jwt';
+import { UserResponseDto } from '../users/dtos/user-response.dto';
 
 @Injectable()
 export class AuthPrismaService implements AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly customersService: CustomersService,
+    private readonly jwtService: JwtService,
   ) {}
-  async validateLoginCredentials(credentials: LoginCredentialsDto) {
-    const user = await this.usersService.findUserByEmailAndPassword(
-      credentials.email,
-      credentials.password,
-    );
+
+  async login(credentials: LoginCredentialsDto): Promise<string> {
+    const user = await this.validateLoginCredentials(credentials);
 
     switch (user.role) {
       case 'CUSTOMER':
-        return this.customersService.findCustomerByUserId(user.id);
+        return this.jwtService.sign(
+          this.customersService.findCustomerByUserId(user.id),
+        );
     }
+  }
+
+  validateLoginCredentials(
+    credentials: LoginCredentialsDto,
+  ): Promise<UserResponseDto> {
+    return this.usersService.findUserByEmailAndPassword(
+      credentials.email,
+      credentials.password,
+    );
   }
 }
