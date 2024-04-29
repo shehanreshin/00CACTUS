@@ -1,15 +1,16 @@
 import {
   Body,
-  Controller,
+  Controller, Get,
   HttpCode,
   HttpStatus,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+  Post, Req,
+  UseGuards
+} from "@nestjs/common";
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { LoginCredentialsDto } from './dto/login-credentials.dto';
 import { AuthService } from './auth.service';
 import { PassportLocalGuard } from './guards/passport-local.guard';
+import { Request } from "express";
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -29,5 +30,10 @@ export class AuthController {
   @Post('login')
   login(@Body() credentials: LoginCredentialsDto) {
     return this.authService.validateLoginCredentials(credentials);
+  }
+
+  @Get('status')
+  status(@Req() req: Request) {
+
   }
 }
