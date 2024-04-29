@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   HttpCode,
@@ -9,10 +8,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { LoginCredentialsDto } from './dto/login-credentials.dto';
 import { AuthService } from './auth.service';
 import { PassportLocalGuard } from './guards/passport-local.guard';
 import { Request } from 'express';
+import { PassportJwtGuard } from './guards/passport-jwt.guard';
+import { CustomerJwtDecodedSchema } from './swagger/customer-jwt-decoded.schema';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -20,7 +20,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOkResponse({
-    description: 'The jwt',
+    description: 'The JSON Web Token including customer/staff details',
     schema: {
       type: 'string',
       example:
@@ -30,10 +30,18 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(PassportLocalGuard)
   @Post('login')
-  login(@Body() credentials: LoginCredentialsDto) {
-    return this.authService.validateLoginCredentials(credentials);
+  login(@Req() req: Request) {
+    return req.user;
   }
 
+  @ApiOkResponse({
+    description:
+      'The decoded JSON Web Token including customer details and issued time',
+    type: CustomerJwtDecodedSchema,
+  })
+  @UseGuards(PassportJwtGuard)
   @Get('status')
-  status(@Req() req: Request) {}
+  status(@Req() req: Request) {
+    return req.user;
+  }
 }
