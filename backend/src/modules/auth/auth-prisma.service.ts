@@ -4,7 +4,6 @@ import { UsersService } from '../users/users.service';
 import { LoginCredentialsDto } from './dto/login-credentials.dto';
 import { CustomersService } from '../customers/customers.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserResponseDto } from '../users/dtos/user-response.dto';
 import { CustomerResponseDto } from '../customers/dto/customer-response.dto';
 
 @Injectable()
