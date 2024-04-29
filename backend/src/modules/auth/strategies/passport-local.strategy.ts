@@ -6,10 +6,16 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class PassportLocalStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthService) {
-    super();
+    super({
+      usernameField: 'email',
+      passwordField: 'password',
+    });
   }
 
   validate(email: string, password: string) {
-    return this.authService.validateLoginCredentials({ email, password });
+    return this.authService.validateLoginCredentials({
+      email,
+      password,
+    });
   }
 }

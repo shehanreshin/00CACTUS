@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import * as process from 'process';
 import { PassportModule } from '@nestjs/passport';
 import { PassportLocalStrategy } from './strategies/passport-local.strategy';
+import { PassportLocalGuard } from './guards/passport-local.guard';
 
 @Module({
   imports: [

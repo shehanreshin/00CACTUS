@@ -1,7 +1,15 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { LoginCredentialsDto } from './dto/login-credentials.dto';
 import { AuthService } from './auth.service';
+import { PassportLocalGuard } from './guards/passport-local.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -17,8 +25,9 @@ export class AuthController {
     },
   })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(PassportLocalGuard)
   @Post('login')
   login(@Body() credentials: LoginCredentialsDto) {
-    return this.authService.login(credentials);
+    return this.authService.validateLoginCredentials(credentials);
   }
 }
