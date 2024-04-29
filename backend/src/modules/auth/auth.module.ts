@@ -6,15 +6,21 @@ import { UsersModule } from '../users/users.module';
 import { CustomersModule } from '../customers/customers.module';
 import { JwtModule } from '@nestjs/jwt';
 import * as process from 'process';
+import { PassportModule } from '@nestjs/passport';
+import { PassportLocalStrategy } from './strategies/passport-local.strategy';
 
 @Module({
   imports: [
     UsersModule,
     CustomersModule,
     JwtModule.register({ secret: process.env.ACCESS_TOKEN_KEY }),
+    PassportModule,
   ],
   exports: [AuthService],
   controllers: [AuthController],
-  providers: [{ provide: AuthService, useClass: AuthPrismaService }],
+  providers: [
+    { provide: AuthService, useClass: AuthPrismaService },
+    PassportLocalStrategy,
+  ],
 })
 export class AuthModule {}
