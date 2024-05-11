@@ -1,0 +1,287 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String     @unique
+  password  String
+  role      UserRole   @default(CUSTOMER)
+  status    UserStatus @default(INACTIVE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Contact   Contact[]
+  Customer  Customer?
+  Staff     Staff?
+  Salt      Salt?
+}
+
+enum UserRole {
+  CUSTOMER
+  STAFF
+  ADMIN
+}
+
+enum UserStatus {
+  INACTIVE
+  ACTIVE
+  BANNED
+  DISABLED
+}
+
+model Contact {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  country     Country  @relation(fields: [countryId], references: [id])
+  countryId   String
+  phoneNumber String
+  isDefault   Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, phoneNumber])
+}
+
+model Address {
+  id        String    @id @default(uuid())
+  line1     String
+  line2     String
+  city      String
+  region    String
+  zipCode   String
+  country   Country   @relation(fields: [countryId], references: [id])
+  countryId String
+  updatedAt DateTime  @updatedAt
+  Customer  Customer?
+  Order     Order[]
+}
+
+model Country {
+  id      String    @id @default(uuid())
+  name    String    @unique
+  code    String    @unique
+  Contact Contact[]
+  Address Address[]
+}
+
+model Customer {
+  id            String          @id @default(uuid())
+  user          User            @relation(fields: [userId], references: [id])
+  userId        String          @unique
+  address       Address         @relation(fields: [addressId], references: [id])
+  addressId     String          @unique
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  Cart          Cart?
+  PaymentMethod PaymentMethod[]
+  Order         Order[]
+  Review        Review[]
+}
+
+model Staff {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cart {
+  id         String     @id @default(uuid())
+  customer   Customer   @relation(fields: [customerId], references: [id])
+  customerId String     @unique
+  CartItem   CartItem[]
+}
+
+model CartItem {
+  id            String      @id @default(uuid())
+  cart          Cart        @relation(fields: [cartId], references: [id])
+  cartId        String
+  productItem   ProductItem @relation(fields: [productItemId], references: [id])
+  productItemId String
+  qty           Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Category {
+  id               String      @id @default(uuid())
+  parentCategory   Category?   @relation("SubCategories", fields: [parentCategoryId], references: [id])
+  parentCategoryId String?
+  subCategory      Category[]  @relation("SubCategories")
+  name             String      @unique
+  createdAt        DateTime    @default(now())
+  Variation        Variation[]
+  Product          Product[]
+}
+
+model Variation {
+  id              String            @id @default(uuid())
+  category        Category          @relation(fields: [categoryId], references: [id])
+  categoryId      String
+  name            String
+  createdAt       DateTime          @default(now())
+  VariationOption VariationOption[]
+}
+
+model VariationOption {
+  id                   String                 @id @default(uuid())
+  variation            Variation              @relation(fields: [variationId], references: [id])
+  variationId          String
+  value                String
+  createdAt            DateTime               @default(now())
+  ProductConfiguration ProductConfiguration[]
+
+  @@unique([variationId, value])
+}
+
+model Product {
+  id          String        @id @default(uuid())
+  category    Category      @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  name        String        @unique
+  description String
+  imagePath   String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  ProductItem ProductItem[]
+}
+
+model ProductItem {
+  id                   String                 @id @default(uuid())
+  product              Product                @relation(fields: [productId], references: [id])
+  productId            String
+  sku                  String                 @unique
+  qtyInStock           Int
+  price                Decimal
+  imagePath            String
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  ProductConfiguration ProductConfiguration[]
+  CartItem             CartItem[]
+  OrderLine            OrderLine[]
+}
+
+model ProductConfiguration {
+  productItem       ProductItem     @relation(fields: [productItemId], references: [id])
+  productItemId     String
+  variationOption   VariationOption @relation(fields: [variationOptionId], references: [id])
+  variationOptionId String
+
+  @@unique([productItemId, variationOptionId])
+}
+
+model PaymentType {
+  id            String            @id @default(uuid())
+  value         PaymentTypeOption @unique
+  PaymentMethod PaymentMethod[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+enum PaymentTypeOption {
+  CREDIT_CARD
+  DEBIT_CARD
+  PAYPAL
+  GOOGLE_PAY
+}
+
+model PaymentMethod {
+  id            String      @id @default(uuid())
+  customer      Customer    @relation(fields: [customerId], references: [id])
+  customerId    String
+  paymentType   PaymentType @relation(fields: [paymentTypeId], references: [id])
+  paymentTypeId String
+  provider      String
+  accountNumber String
+  expiryDate    DateTime    @db.Date
+  isDefault     Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  Order         Order[]
+
+  @@unique([customerId, paymentTypeId, provider, accountNumber])
+}
+
+model OrderStatus {
+  id    String            @id @default(uuid())
+  value OrderStatusOption @unique
+  Order Order[]
+}
+
+enum OrderStatusOption {
+  PENDING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model ShippingMethod {
+  id    String  @id @default(uuid())
+  name  String  @unique
+  price Decimal
+  Order Order[]
+}
+
+model Order {
+  id                String         @id @default(uuid())
+  customer          Customer       @relation(fields: [customerId], references: [id])
+  customerId        String
+  total             Decimal
+  paymentMethod     PaymentMethod  @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId   String
+  shippingMethod    ShippingMethod @relation(fields: [shippingMethodId], references: [id])
+  shippingMethodId  String
+  orderStatus       OrderStatus    @relation(fields: [orderStatusId], references: [id])
+  orderStatusId     String
+  shippingAddress   Address        @relation(fields: [shippingAddressId], references: [id])
+  shippingAddressId String
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  OrderLine         OrderLine[]
+}
+
+model OrderLine {
+  id            String      @id @default(uuid())
+  productItem   ProductItem @relation(fields: [productItemId], references: [id])
+  productItemId String
+  order         Order       @relation(fields: [orderId], references: [id])
+  orderId       String
+  qty           Int
+  price         Decimal
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  Review        Review[]
+}
+
+model Review {
+  id               String    @id @default(uuid())
+  customer         Customer  @relation(fields: [customerId], references: [id])
+  customerId       String
+  orderedProduct   OrderLine @relation(fields: [orderedProductId], references: [id])
+  orderedProductId String
+  rating           Int
+  comment          String
+
+  @@unique([customerId, orderedProductId])
+}
+
+model Salt {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+  salt   String
+}
